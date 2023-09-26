@@ -75,11 +75,18 @@ document.addEventListener("DOMContentLoaded", function(){
             todoListElement.appendChild(listItem);
         });
 
-        todoListElement.innerHTML += '<input type="text" id="newItemInput" placeholder="Add a new task"><button id="addItemButton">Add Task</button>';
-        
+
     }
 
     document.getElementById("createTaskButton").addEventListener("click", createTask);
 
     renderTaskList();
 });
+
+
+    //=======I MAY USE THIS LATER FOR A DYNAMIC FUNCTION======
+    // let 
+    // todoListElement.innerHTML += '<input type="text" id="newItemInput" placeholder="Add a new task"><button id="addItemButton">Add Task</button>';
+    // console.log(newItemInput);
+    // document.getElementById("addItemButton").addEventListener("click", addItemButton);
+    // console.log(document.getElementById('addItemButton'))
