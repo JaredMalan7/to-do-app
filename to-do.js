@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(){
-    let tasks = {};
+    let tasks = [];
+    let activeTaskIndex = null;
 
     function createTask(){
         let taskName = document.getElementById("taskNameInput").value;
@@ -10,38 +11,61 @@ document.addEventListener("DOMContentLoaded", function(){
                 toDoList: []
             };
 
-            tasks[taskName] = task;
-            console.log(task);
+            tasks.push(task);
+            activeTaskIndex = tasks.length -1;
+            // console.log(task);
             renderTaskList();
 
 
+            document.getElementById("taskItemInput").style.display = "block"; // This line of code is only executed if an object taskName exists.
+
+            clearInput("taskNameInput"); //test to clear newItemInput
+
             function addItem() {
-                let newItemInput = document.getElementById("newItemInput");
-                let newItemText = newItemInput.value
-                if(newItemText.trim() !=="") {
-                    task.toDoList.push({text: newItemText, completed: false});
-                    renderTodoList(task);
-                    newItemInput.value = "";
+                if(activeTaskIndex !==null){
+                    let newItemInput = document.getElementById("newItemInput");
+                    let newItemText = newItemInput.value
+                    if(newItemText.trim() !=="") {
+                        tasks[activeTaskIndex].toDoList.push({text: newItemText, completed:false});
+                        renderTodoList(tasks[activeTaskIndex]);
+                        newItemInput.value = "";
+                        clearInput("newItemInput"); //test to clear newItemInput
+                    }
+
                 }
             }
             let addItemButton = document.getElementById("addItemButton");
             if (addItemButton){
                 addItemButton.addEventListener("click", addItem);
             }
-            // document.getElementById("addItemButton").addEventListener("click", addItem);
         }
 
+    }
+
+    function clearInput(inputId){
+        let inputField = document.getElementById(inputId);
+        if (inputField) {
+            inputField.value = "";
+        }
     }
     function renderTaskList(){
         let taskElement = document.getElementById("tasks");
         taskElement.innerHTML = "";
 
-        for (let taskName in tasks) {
+        for (let i = 0; i < tasks.length; i++) {
+            let taskName = tasks[i].name;
             let listItem = document.createElement("li");
             listItem.textContent = taskName;
+
+            if (i === activeTaskIndex){
+                listItem.style.backgroundColor = "rgb(235, 235, 235)";
+            }
             listItem.addEventListener("click", function (event){
-                let taskName = event.target.textContent;
-                renderTodoList(tasks[taskName]);
+                // let taskName = event.target.textContent;
+                // renderTodoList(tasks[taskName]);
+                setActiveTask(i);
+                renderTodoList(tasks[i]);
+                renderTaskList();
             });
 
             taskElement.appendChild(listItem);
@@ -77,6 +101,18 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
     }
+
+    function setActiveTask(index){
+        activeTaskIndex = index;
+    }
+
+    // function {
+
+
+    // }
+
+
+
 
     document.getElementById("createTaskButton").addEventListener("click", createTask);
 

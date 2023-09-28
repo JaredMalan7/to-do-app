@@ -7,6 +7,13 @@ ul li{
     margin: .5em;
     list-style: none;
     font-weight: bold;
+    padding: .7em;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+li:hover {
+    background-color: rgb(235, 235, 235);
 }
 
 div.task-item {
@@ -38,3 +45,6 @@ div.task-item input {
     min-width: 33%;
 }
 
+div#taskItemInput{
+    display: none;
+}
