@@ -45,6 +45,6 @@ div.task-item input {
     min-width: 33%;
 }
 
-div#taskItemInput{
+div#taskItemInput, div#icons{
     display: none;
 }

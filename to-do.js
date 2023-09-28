@@ -55,11 +55,35 @@ document.addEventListener("DOMContentLoaded", function(){
         for (let i = 0; i < tasks.length; i++) {
             let taskName = tasks[i].name;
             let listItem = document.createElement("li");
+
+
+            // ===== EDIT BUTTON =====
+            let editButton = document.createElement("i");
+            editButton.className = "fa-solid fa-pen-to-square";
+            editButton.style.color = "#000000";
+            editButton.addEventListener("click", function(){
+                editTask(i);
+            })
+
+            // ===== DELTE BUTTON =====
+
+            let deleteButton = document.createElement("i");
+            deleteButton.className = "fa-solid fa-trash";
+            deleteButton.style.color = "#000000";
+            deleteButton.addEventListener("click", function (){
+                deleteTask(i);
+            })
+
             listItem.textContent = taskName;
 
             if (i === activeTaskIndex){
                 listItem.style.backgroundColor = "rgb(235, 235, 235)";
             }
+
+            listItem.appendChild(editButton);
+            listItem.appendChild(deleteButton);
+            taskElement.appendChild(listItem);
+
             listItem.addEventListener("click", function (event){
                 // let taskName = event.target.textContent;
                 // renderTodoList(tasks[taskName]);
@@ -68,14 +92,16 @@ document.addEventListener("DOMContentLoaded", function(){
                 renderTaskList();
             });
 
-            taskElement.appendChild(listItem);
         }
     }
 
     function renderTodoList(task) {
         let todoListElement = document.getElementById("toDo");
-        //let task = tasks[taskName]; // this needs to be revised...
 
+        //this helps clear the todoListElement
+        todoListElement.innerHTML = "";
+
+        if (task){
         todoListElement.innerHTML = `<h2>${task.name}</h2>`;
 
         task.toDoList.forEach(function(item, index) {
@@ -97,32 +123,42 @@ document.addEventListener("DOMContentLoaded", function(){
             listItem.appendChild(checkbox);
             listItem.appendChild(itemText);
             todoListElement.appendChild(listItem);
-        });
+            
+            });
+            
 
-
+        }
     }
 
     function setActiveTask(index){
         activeTaskIndex = index;
     }
 
-    // function {
 
+    //  EDIT FEATURE
+    function editTask(index) {
+        let newName = prompt("Edit Task Name:", tasks[index].name);
+        if(newName !== null) {
+            tasks[index].name = newName;
+            renderTaskList();
+        }
+    }
 
-    // }
+    // DELETE FEATURE
 
-
+    function deleteTask(index) {
+        if (confirm("Are you sure you want to delete this item?")) {
+            tasks.splice(index, 1);
+            if (activeTaskIndex === index){
+                activeTaskIndex = null;
+            }
+            renderTaskList();
+            renderTodoList({name: "", toDoList: []});
+        }
+    }
 
 
     document.getElementById("createTaskButton").addEventListener("click", createTask);
 
     renderTaskList();
 });
-
-
-    //=======I MAY USE THIS LATER FOR A DYNAMIC FUNCTION======
-    // let 
-    // todoListElement.innerHTML += '<input type="text" id="newItemInput" placeholder="Add a new task"><button id="addItemButton">Add Task</button>';
-    // console.log(newItemInput);
-    // document.getElementById("addItemButton").addEventListener("click", addItemButton);
-    // console.log(document.getElementById('addItemButton'))
