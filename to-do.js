@@ -61,15 +61,17 @@ document.addEventListener("DOMContentLoaded", function(){
             let editButton = document.createElement("i");
             editButton.className = "fa-solid fa-pen-to-square";
             editButton.style.color = "#000000";
+            editButton.setAttribute("data-type", "task");
             editButton.addEventListener("click", function(){
                 editTask(i);
             })
 
-            // ===== DELTE BUTTON =====
+            // ===== DELETE BUTTON =====
 
             let deleteButton = document.createElement("i");
             deleteButton.className = "fa-solid fa-trash";
             deleteButton.style.color = "#000000";
+            deleteButton.setAttribute("data-type", "task");
             deleteButton.addEventListener("click", function (){
                 deleteTask(i);
             })
@@ -108,6 +110,25 @@ document.addEventListener("DOMContentLoaded", function(){
             let listItem = document.createElement("div");
             listItem.className = "task-item";
 
+            // ===== EDIT BUTTON =====
+            let editButton = document.createElement("i");
+            editButton.className = "fa-solid fa-pen-to-square";
+            editButton.style.color = "#000000";
+            editButton.setAttribute("data-type", "item");
+            editButton.addEventListener("click", function(){
+                editTask(activeTaskIndex, index);
+            }.bind(null, index)); // testing this to pass 'index' as an argument
+
+            // ===== DELETE BUTTON =====
+
+            let deleteButton = document.createElement("i");
+            deleteButton.className = "fa-solid fa-trash";
+            deleteButton.style.color = "#000000";
+            deleteButton.setAttribute("data-type", "item");
+            deleteButton.addEventListener("click", function (){
+                deleteTask(activeTaskIndex, index);
+            }.bind(null, index)); // testing this to pass 'index' as an argument
+
 
             let checkbox = document.createElement("input");
             checkbox.type = "checkbox";
@@ -120,10 +141,12 @@ document.addEventListener("DOMContentLoaded", function(){
             let itemText = document.createElement("span");
             itemText.textContent = item.text;
 
+
             listItem.appendChild(checkbox);
             listItem.appendChild(itemText);
             todoListElement.appendChild(listItem);
-            
+            listItem.appendChild(editButton);
+            listItem.appendChild(deleteButton);
             });
             
 
@@ -136,25 +159,54 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
     //  EDIT FEATURE
-    function editTask(index) {
-        let newName = prompt("Edit Task Name:", tasks[index].name);
-        if(newName !== null) {
-            tasks[index].name = newName;
-            renderTaskList();
+    function editTask(taskIndex, itemIndex) {
+        let targetType = event.target.getAttribute("data-type");
+        if(targetType === "task"){
+            if(tasks[taskIndex]){
+                let newName = prompt("Edit Task Name:", tasks[taskIndex].name);
+                if(newName !== null) {
+                    tasks[taskIndex].name = newName;
+                    renderTaskList();
+                    renderTodoList(tasks[taskIndex]);
+                }
+    
+            }   else{
+                console.error("invalid task or item index"); //testing for errors
+            }
+
+        } else if (targetType === "item") {
+            let newName=prompt("Edit Item Name:", tasks[taskIndex].toDoList[itemIndex].text);
+            if (newName !== null) {
+                tasks[taskIndex].toDoList[itemIndex].text = newName;
+                renderTaskList();
+                renderTodoList(tasks[taskIndex]);
+            }
         }
+    
     }
 
     // DELETE FEATURE
 
-    function deleteTask(index) {
-        if (confirm("Are you sure you want to delete this item?")) {
-            tasks.splice(index, 1);
-            if (activeTaskIndex === index){
-                activeTaskIndex = null;
+    function deleteTask(taskIndex, itemIndex) {
+        let targetType = event.target.getAttribute("data-type");
+        if (targetType === "task") {
+            if (confirm("Are you sure you want to delete this item?")) {
+                tasks.splice(taskIndex, 1);
+                if (activeTaskIndex === taskIndex){
+                    activeTaskIndex = null;
+                }
+                renderTaskList();
+                renderTodoList({name: "", toDoList: []});
             }
-            renderTaskList();
-            renderTodoList({name: "", toDoList: []});
+            
+        } else if (targetType === "item"){
+            if(confirm("are you sure you want to delete this item?")){
+                tasks[taskIndex].toDoList.splice(itemIndex, 1);
+                renderTaskList();
+                renderTodoList(tasks[taskIndex]);
+            }
         }
+        
     }
 
 
